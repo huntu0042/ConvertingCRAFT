@@ -56,11 +56,14 @@ if __name__ == '__main__':
     #dataset2 = tf.data.Dataset.from_generator(gen,
     #                                         (tf.int64, tf.int64),
     #                                        (tf.TensorShape([]), tf.TensorShape([None])))
-    dataset.batch(batch_size=2)
-    iterator = dataset.make_one_shot_iterator()
+    dataset.batch(batch_size=3)
+    #iterator = dataset.make_one_shot_iterator()
     #x,y,z,k,f = iterator.get_next()
 
-    print(list(dataset.as_numpy_iterator()))
+    for element in dataset.as_numpy_iterator():
+
+        print(element)
+        print("###")
 
     #for epoch in range(300):
 
