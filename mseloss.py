@@ -29,11 +29,19 @@ class Maploss():
                     nega_loss = tf.reduce_mean(pre_loss[i][(loss_label[i] < 0.1)])
                     average_number += len(pre_loss[i][(loss_label[i] < 0.1)])
                 else:
-                    nega_loss = tf.reduce_mean(torch.topk(pre_loss[i][(loss_label[i] < 0.1)], 3*positive_pixel)[0])
+                    pick = tf.math.top_k(pre_loss[i][(loss_label[i] < 0.1)],3*positive_pixel)[0]
+                    print("##")
+                    print(pick)
+                    print(pick.shape)
+                    print(positive_pixel)
+                    nega_loss = tf.reduce_mean(pick)
+                    print(nega_loss)
+                    #nega_loss = tf.reduce_mean(torch.topk(pre_loss[i][(loss_label[i] < 0.1)], 3*positive_pixel)[0])
                     average_number += 3*positive_pixel
                 sum_loss += nega_loss
             else:
-                nega_loss = tf.reduce_mean(torch.topk(pre_loss[i], 500)[0])
+                pick = tf.math.top_k(pre_loss[i],500)[0]
+                nega_loss = tf.reduce_mean(pick)
                 average_number += 500
                 sum_loss += nega_loss
             #sum_loss += loss/average_number

@@ -52,7 +52,7 @@ if __name__ == '__main__':
     from craft_net import CRAFT
 
     #net = CRAFT(freeze=True)
-    synthtextloader = Synth80k('/Users/yunseong/Documents/dev/dataset/test12', target_size=768, viz=True, debug=True)
+    synthtextloader = Synth80k('/home/motion2ai/Desktop/Dev/ocr/dataset/SynthText/SynthText', target_size=768, viz=True, debug=True)
     print(synthtextloader)
     print(synthtextloader.pull_item(1))
 
@@ -99,7 +99,8 @@ if __name__ == '__main__':
                 # print(gah_label.shape)
                 # print("--------")
                 loss = lossObject.forward(gh_label, gah_label, out1, out2, mask)
-                # print(loss)
+                print("---loss---")
+                print(loss)
 
                 # 현재 배치에 대한 손실값을 측정합니다
                 #loss_value = loss(y, logits)
