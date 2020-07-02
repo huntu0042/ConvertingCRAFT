@@ -307,7 +307,7 @@ class craft_base_dataset():
                                 axis=0)
         output = np.hstack([image, output])
         outpath = os.path.join(os.path.join(os.path.dirname(__file__) + '/output'), "%s_input.jpg" % imagename)
-        print(outpath)
+        #print(outpath)
         if not os.path.exists(os.path.dirname(outpath)):
             os.mkdir(os.path.dirname(outpath))
         cv2.imwrite(outpath, output)
@@ -380,13 +380,19 @@ class craft_base_dataset():
                                               variance=(0.229, 0.224, 0.225))
 
         image_tensor = tf.convert_to_tensor(image, np.float32)
-        image_tensor = tf.transpose(image_tensor,[2,0,1])
+        #image_tensor = tf.transpose(image_tensor,[2,0,1])
 
+        print("##")
+
+        print(region_scores.shape)
         region_scores_tensor = tf.convert_to_tensor(region_scores / 255, np.float32)
+        print(region_scores_tensor.shape)
+
+
 
         affinity_scores_tensor = tf.convert_to_tensor(affinity_scores/255, np.float32)
         confidence_mask_tensor = tf.convert_to_tensor(confidence_mask / 255, np.float32)
-        print(confidences)
+        #print(confidences)
         #self.count += 1
         return image_tensor, region_scores_tensor, affinity_scores_tensor, confidence_mask_tensor, confidences
 

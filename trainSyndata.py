@@ -5,6 +5,10 @@ import time
 import random
 from data_loader import *
 
+
+###import file#######
+from mseloss import Maploss
+
 parser = argparse.ArgumentParser(description='CRAFT reimplementation')
 
 
@@ -25,6 +29,7 @@ parser.add_argument('--gamma', default=0.1, type=float,
 parser.add_argument('--num_workers', default=32, type=int,
                     help='Number of workers used in dataloading')
 
+args = parser.parse_args()
 
 def gen():
     for i in range(0,10):
@@ -56,16 +61,50 @@ if __name__ == '__main__':
     #dataset2 = tf.data.Dataset.from_generator(gen,
     #                                         (tf.int64, tf.int64),
     #                                        (tf.TensorShape([]), tf.TensorShape([None])))
-    dataset.batch(batch_size=3)
-    #iterator = dataset.make_one_shot_iterator()
-    #x,y,z,k,f = iterator.get_next()
+    dataset = dataset.batch(batch_size=2)
 
-    for element in dataset.as_numpy_iterator():
+    it = iter(dataset)
 
-        print(element)
-        print("###")
 
-    #for epoch in range(300):
+    # for element in dataset.as_numpy_iterator():
+    #     print(element)
+    #     print("###")
+
+
+    model = CRAFT()
+    # 정확도에 대한 Metric의 인스턴스를 만듭니다
+    accuracy = tf.keras.metrics.SparseCategoricalAccuracy()
+    # Optimizer의 인스턴스를 만듭니다
+    optimizer = tf.keras.optimizers.Adam(learning_rate=args.lr)
+    lossObject = Maploss()
+
+
+    for epoch in range(300):
+        # GradientTape 열어줍니다
+        for step, (image, gh_label, gah_label, mask, _) in enumerate(dataset):
+            #image = tf.expand_dims(image, 0)
+
+            print(image.shape)
+            print(type(image))
+
+            with tf.GradientTape() as tape:
+                # 순방향 전파(forward)를 수행합니다
+                out, _ = model(image)
+                # print(out.shape)
+
+                out1 = out[:, :, :, 0]
+                out2 = out[:, :, :, 1]
+                # print("--------")
+                # print(gh_label.shape)
+                # print(gah_label.shape)
+                # print("--------")
+                loss = lossObject.forward(gh_label, gah_label, out1, out2, mask)
+                # print(loss)
+
+                # 현재 배치에 대한 손실값을 측정합니다
+                #loss_value = loss(y, logits)
+
+
 
 
 
@@ -77,4 +116,3 @@ if __name__ == '__main__':
 
     #print(x.shape, y.shape,z.shape,k.shape,f.shape)
 
-    #net = CRAFT()

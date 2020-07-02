@@ -12,7 +12,7 @@ class vgg16_bn(tf.keras.Model):
     super(vgg16_bn, self).__init__()
     self.VGG_MEAN = [103.939, 116.779, 123.68]
 
-    self.input_layer = tf.keras.layers.Input(shape=(224,224,3))
+    self.input_layer = tf.keras.layers.Input(shape=(768,768,3))
 
     # Block 1
     self.conv1_1 =  tf.keras.layers.Conv2D(filters=64,
@@ -122,11 +122,11 @@ class vgg16_bn(tf.keras.Model):
     # define input layer
     # print(self.pool1_1)
     #x = self.input_layer(inputs)
-    red, green, blue = tf.split(axis=3, num_or_size_splits=3, value=inputs)
-    bgr = tf.concat(axis=3, values=[blue - self.VGG_MEAN[0], green - self.VGG_MEAN[1], red - self.VGG_MEAN[2]])
+    #red, green, blue = tf.split(axis=3, num_or_size_splits=3, value=inputs)
+    #bgr = tf.concat(axis=3, values=[blue - self.VGG_MEAN[0], green - self.VGG_MEAN[1], red - self.VGG_MEAN[2]])
 
 
-    x = self.conv1_1(bgr)
+    x = self.conv1_1(inputs)
     x = self.conv1_2(x)
     x = self.pool1_1(x)
 
@@ -163,12 +163,12 @@ class vgg16_bn(tf.keras.Model):
     x_fc7 = x
 
     #x = self.fc8(x)
-    #prob = tf.nn.softmax(x)
-    print(x_relu2_2.shape)
-    print(x_relu3_2.shape)
-    print(x_relu4_3.shape)
-    print(x_relu5_3.shape)
-    print(x_fc7.shape)
+    # #prob = tf.nn.softmax(x)
+    # print(x_relu2_2.shape)
+    # print(x_relu3_2.shape)
+    # print(x_relu4_3.shape)
+    # print(x_relu5_3.shape)
+    # print(x_fc7.shape)
     vgg_outputs = namedtuple("VggOutputs", ['fc7', 'relu5_3', 'relu4_3', 'relu3_2', 'relu2_2'])
     out = vgg_outputs(x_fc7, x_relu5_3, x_relu4_3, x_relu3_2, x_relu2_2)
 
@@ -178,12 +178,14 @@ class vgg16_bn(tf.keras.Model):
 if __name__ == '__main__':
 
   image = Image.open("./data/test.jpg")
-  image = image.resize([224, 224])
+  image = image.resize([768, 768])
   image = np.array(image)
   image_data = image.astype(np.float32)
 
   model = vgg16_bn()
-  inputs = tf.random.normal(shape=[1, 224, 224, 3])
+  inputs = tf.random.normal(shape=[1, 768, 768, 3])
+
+  print(image_data.shape)
   x_1 = model(inputs=inputs)
 
   #x_1 = model(inputs=np.expand_dims(image_data, 0))

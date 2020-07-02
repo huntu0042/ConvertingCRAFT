@@ -37,7 +37,7 @@ class CRAFT(tf.keras.Model):
 
         """ Base network """
         self.basenet = vgg16_bn()
-        inputs = tf.random.normal(shape=[1, 224, 224, 3])
+        inputs = tf.random.normal(shape=[1, 768, 768, 3])
         x_1 = self.basenet(inputs=inputs)
 
         # Load weighs
@@ -89,44 +89,43 @@ class CRAFT(tf.keras.Model):
     def call(self, inputs):
         sources = self.basenet(inputs)
 
-        print(sources[0].shape)
-        print(sources[1].shape)
+        #print(sources[0].shape)
+        #print(sources[1].shape)
 
         y = tf.concat([sources[0], sources[1]],-1)
-        print("##")
-        print(y.shape)
+        #print("##")
+        #print(y.shape)
         y = self.upconv1(y)
-        print("##")
-        print(y.shape)
+        #print("##")
+        #print(y.shape)
         y = tf.image.resize(y, sources[2].shape[1:3])
-        print("##")
-        print(y.shape)
+        #print("##")
+        #print(y.shape)
         y = tf.concat([y, sources[2]],-1)
-        print(y.shape)
+        #print(y.shape)
         y = self.upconv2(y)
-        print(y.shape)
+        #print(y.shape)
 
         y = tf.image.resize(y, sources[3].shape[1:3])
-        print("##")
-        print(y.shape)
+        #print("##")
+        #print(y.shape)
         y = tf.concat([y, sources[3]], -1)
-        print(y.shape)
+        #print(y.shape)
         y = self.upconv3(y)
-        print(y.shape)
+        #print(y.shape)
 
         y = tf.image.resize(y, sources[4].shape[1:3])
-        print("##")
-        print(y.shape)
+        #print("##")
+        #print(y.shape)
         y = tf.concat([y, sources[4]], -1)
-        print(y.shape)
+        #print(y.shape)
         feature = self.upconv4(y)
-        print(feature.shape)
+        #print(feature.shape)
 
         y = self.conv_cls(feature)
-        print(y.shape)
-        print(y.permute(0, 2, 3, 1))
+        #print(y.shape)
 
-        return y
+        return y, feature
 
 
 
