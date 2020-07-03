@@ -382,11 +382,7 @@ class craft_base_dataset():
         image_tensor = tf.convert_to_tensor(image, np.float32)
         #image_tensor = tf.transpose(image_tensor,[2,0,1])
 
-        print("##")
-
-        print(region_scores.shape)
         region_scores_tensor = tf.convert_to_tensor(region_scores / 255, np.float32)
-        print(region_scores_tensor.shape)
 
 
 
@@ -397,10 +393,12 @@ class craft_base_dataset():
         return image_tensor, region_scores_tensor, affinity_scores_tensor, confidence_mask_tensor, confidences
 
     def generate_data(self):
-        for i in range(0,100):
+        for i in range(0,len(self)):
             index = self.count
             output = self.pull_item(index)
             self.count += 1
+            if i == len(self)-1:
+                i=0
             yield output
 
 
@@ -413,9 +411,6 @@ class Synth80k(craft_base_dataset):
         gt = scio.loadmat(os.path.join(synthtext_folder, 'gt.mat'))
         self.charbox = gt['charBB'][0]
         self.image = gt['imnames'][0]
-        print(self.image)
-        for i in range(0,100):
-            print(self.image[i])
         self.imgtxt = gt['txt'][0]
 
     def __getitem__(self, index):
@@ -434,7 +429,6 @@ class Synth80k(craft_base_dataset):
         :return:bboxes 字符的框，
         '''
         img_path = os.path.join(self.synthtext_folder, self.image[index][0])
-        print(img_path)
         image = cv2.imread(img_path, cv2.IMREAD_COLOR)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         _charbox = self.charbox[index].transpose((2, 1, 0))

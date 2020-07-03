@@ -8,14 +8,14 @@ class Maploss():
 
     def single_image_loss(self, pre_loss, loss_label):
         batch_size = pre_loss.shape[0]
-        print("loss")
-        print(pre_loss.shape)
-        print(tf.reshape(pre_loss,[-1]))
-        print(tf.reduce_mean(tf.reshape(pre_loss,[-1])))
+        # print("loss")
+        # print(pre_loss.shape)
+        # print(tf.reshape(pre_loss,[-1]))
+        # print(tf.reduce_mean(tf.reshape(pre_loss,[-1])))
         sum_loss = tf.reduce_mean(tf.reshape(pre_loss,[-1])) * 0
         pre_loss = tf.reshape(pre_loss,[batch_size,-1])
         loss_label = tf.reshape(loss_label,[batch_size,-1])
-        print(pre_loss.shape)
+        #print(pre_loss.shape)
 
         internel = batch_size
         for i in range(batch_size):
@@ -30,12 +30,7 @@ class Maploss():
                     average_number += len(pre_loss[i][(loss_label[i] < 0.1)])
                 else:
                     pick = tf.math.top_k(pre_loss[i][(loss_label[i] < 0.1)],3*positive_pixel)[0]
-                    print("##")
-                    print(pick)
-                    print(pick.shape)
-                    print(positive_pixel)
                     nega_loss = tf.reduce_mean(pick)
-                    print(nega_loss)
                     #nega_loss = tf.reduce_mean(torch.topk(pre_loss[i][(loss_label[i] < 0.1)], 3*positive_pixel)[0])
                     average_number += 3*positive_pixel
                 sum_loss += nega_loss
@@ -55,10 +50,10 @@ class Maploss():
         gah_label = gah_label
         p_gh = p_gh
         p_gah = p_gah
-        print(p_gh.shape)
-        print(gh_label.shape)
-        print(p_gah.shape)
-        print(gah_label.shape)
+        # print(p_gh.shape)
+        # print(gh_label.shape)
+        # print(p_gah.shape)
+        # print(gah_label.shape)
 
         assert p_gh.shape == gh_label.shape and p_gah.shape == gah_label.shape
         loss1 = tf.compat.v1.losses.mean_squared_error(p_gh, gh_label,reduction=tf.compat.v1.losses.Reduction
