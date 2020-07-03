@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
     strategy = tf.distribute.MirroredStrategy()
 
-    batch_size = 6
+    batch_size = args.batch_size
     dataset = tf.data.Dataset.from_generator(synthtextloader.generate_data,output_types=(tf.float32,tf.float32,tf.float32,tf.float32,tf.float32))
     dataset = dataset.batch(batch_size=batch_size)
     #it = iter(dataset)
@@ -75,13 +75,19 @@ if __name__ == '__main__':
     train_summary_writer = tf.summary.create_file_writer(train_log_dir)
     test_summary_writer = tf.summary.create_file_writer(test_log_dir)
 
-    model = CRAFT()
-    # 정확도에 대한 Metric의 인스턴스를 만듭니다
-    accuracy = tf.keras.metrics.SparseCategoricalAccuracy()
-    # Optimizer의 인스턴스를 만듭니다
-    objectLR = controlLR()
-    optimizer = tf.keras.optimizers.Adam(learning_rate=objectLR.adjustLR)
-    lossObject = Maploss()
+    with strategy.scope():
+        model = CRAFT()
+        # 정확도에 대한 Metric의 인스턴스를 만듭니다
+        accuracy = tf.keras.metrics.SparseCategoricalAccuracy()
+        # Optimizer의 인스턴스를 만듭니다
+        objectLR = controlLR()
+        optimizer = tf.keras.optimizers.Adam(learning_rate=objectLR.adjustLR)
+        lossObject = Maploss()
+
+        def compute_loss(gh_label, gah_label, out1, out2, mask):
+            loss_value = lossObject.forward(gh_label, gah_label, out1, out2, mask)
+            return tf.nn.compute_average_loss(tf.convert_to_tensor(loss_value),global_batch_size=args.batch_size)
+
     loss_save = 0
     st = time.time()
     step_index = 0
@@ -92,35 +98,37 @@ if __name__ == '__main__':
             step_index += 1
             objectLR.adjustStep(step_index)
 
-        for step, (image, gh_label, gah_label, mask, _) in enumerate(dataset):
-            #image = tf.expand_dims(image, 0)
+        with strategy.scope():
+            for step, (image, gh_label, gah_label, mask, _) in enumerate(dataset):
+                #image = tf.expand_dims(image, 0)
 
-            with tf.GradientTape() as tape:
-            
-                # 순방향 전파(forward)를 수행합니다
-                out, _ = model(image)
-                # print(out.shape)
-                out1 = out[:, :, :, 0]
-                out2 = out[:, :, :, 1]
-                loss_value = lossObject.forward(gh_label, gah_label, out1, out2, mask)
+                with tf.GradientTape() as tape:
+                    # 순방향 전파(forward)를 수행합니다
+                    out, _ = model(image)
+                    # print(out.shape)
+                    out1 = out[:, :, :, 0]
+                    out2 = out[:, :, :, 1]
+                    loss_value = compute_loss(gh_label, gah_label, out1, out2, mask)
 
-            gradients = tape.gradient(loss_value,model.trainable_weights)
-            optimizer.apply_gradients(zip(gradients,model.trainable_weights))
+                print(loss_value)
 
-            '''record'''
-            loss_save += loss_value
-            if step % 2 == 0 and step > 0:
-                et = time.time()
-                print('epoch {}:({}/{}) batch || training time for 2 batch {} || training loss {} ||'.format(epoch, step, int(len_data/batch_size), et-st, loss_value/2))
-                print(objectLR.adjustLR())
-                loss_time = 0
-                loss_save = 0
-                st = time.time()
-            #accuracy.update_state(image,out)
+                gradients = tape.gradient(loss_value,model.trainable_weights)
+                optimizer.apply_gradients(zip(gradients,model.trainable_weights))
 
-            if step % 10 == 0 :
-                with train_summary_writer.as_default():
-                    tf.summary.scalar('loss', loss_value/2, step=step)
+                '''record'''
+                loss_save += loss_value
+                if step % 2 == 0 and step > 0:
+                    et = time.time()
+                    print('epoch {}:({}/{}) batch || training time for 2 batch {} || training loss {} ||'.format(epoch, step, int(len_data/batch_size), et-st, loss_value/2))
+                    print(objectLR.adjustLR())
+                    loss_time = 0
+                    loss_save = 0
+                    st = time.time()
+                #accuracy.update_state(image,out)
+
+                if step % 10 == 0 :
+                    with train_summary_writer.as_default():
+                        tf.summary.scalar('loss', loss_value/2, step=step)
 
 
 
