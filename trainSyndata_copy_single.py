@@ -8,6 +8,7 @@ from data_loader import *
 
 ###import file#######
 from mseloss import Maploss
+from test import test
 
 tf.debugging.set_log_device_placement(True)
 
@@ -128,10 +129,12 @@ if __name__ == '__main__':
                     tf.summary.scalar('loss', loss_value/2, step=step)
                     tf.summary.scalar('learning rate', objectLR.adjustLR(), step=step)
 
-            if step % 10000 == 0 :
+            if step % 50 == 0 :
                 with train_summary_writer.as_default():
                     tf.summary.scalar('loss', loss_value/2, step=step)
-                model.save_weights('./checkpoints/my_checkpoint')
+                model.save_weights('./checkpoints/my_checkpoint_'+str(step))
+                test("checkpoints/my_checkpoint_"+str(step), "test_result/", 0)
+
 
     # print(x)
     # print(y)
