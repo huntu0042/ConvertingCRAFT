@@ -64,8 +64,9 @@ if __name__ == '__main__':
     strategy = tf.distribute.MirroredStrategy()
 
     batch_size = args.batch_size
-    dataset = tf.data.Dataset.from_generator(synthtextloader.generate_data,output_types=(tf.float32,tf.float32,tf.float32,tf.float32,tf.float32))
-    dataset = dataset.batch(batch_size=batch_size)
+    with strategy.scope():
+        dataset = tf.data.Dataset.from_generator(synthtextloader.generate_data,output_types=(tf.float32,tf.float32,tf.float32,tf.float32,tf.float32))
+        dataset = dataset.batch(batch_size=batch_size)
     #it = iter(dataset)
 
     ###for summary

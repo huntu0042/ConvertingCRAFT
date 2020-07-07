@@ -407,6 +407,7 @@ class Synth80k(craft_base_dataset):
 
     def __init__(self, synthtext_folder, target_size=768, viz=False, debug=False):
         super(Synth80k, self).__init__(target_size, viz, debug)
+        print("viz")
         self.synthtext_folder = synthtext_folder
         gt = scio.loadmat(os.path.join(synthtext_folder, 'gt.mat'))
         self.charbox = gt['charBB'][0]

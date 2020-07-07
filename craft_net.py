@@ -12,16 +12,16 @@ class double_conv(tf.keras.Model):
         self.conv = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(filters=mid_ch,
                                    kernel_size=(1, 1),
-                                   activation='relu',
                                    padding='same',
                                    ),
             tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.ReLU(),
             tf.keras.layers.Conv2D(filters=out_ch,
                                    kernel_size=(3, 3),
-                                   activation='relu',
                                    padding="same",
                                    ),
-            tf.keras.layers.BatchNormalization()
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.ReLU()
         ])
 
 
@@ -93,37 +93,20 @@ class CRAFT(tf.keras.Model):
         #print(sources[1].shape)
 
         y = tf.concat([sources[0], sources[1]],-1)
-        #print("##")
-        #print(y.shape)
         y = self.upconv1(y)
-        #print("##")
-        #print(y.shape)
         y = tf.image.resize(y, sources[2].shape[1:3])
-        #print("##")
-        #print(y.shape)
         y = tf.concat([y, sources[2]],-1)
-        #print(y.shape)
         y = self.upconv2(y)
-        #print(y.shape)
 
         y = tf.image.resize(y, sources[3].shape[1:3])
-        #print("##")
-        #print(y.shape)
         y = tf.concat([y, sources[3]], -1)
-        #print(y.shape)
         y = self.upconv3(y)
-        #print(y.shape)
 
         y = tf.image.resize(y, sources[4].shape[1:3])
-        #print("##")
-        #print(y.shape)
         y = tf.concat([y, sources[4]], -1)
-        #print(y.shape)
         feature = self.upconv4(y)
-        #print(feature.shape)
 
         y = self.conv_cls(feature)
-        #print(y.shape)
 
         return y, feature
 
