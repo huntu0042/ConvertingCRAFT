@@ -61,4 +61,8 @@ class Maploss(tf.keras.losses.Loss):
 
         char_loss = self.single_image_loss(loss_g, gh_label)
         affi_loss = self.single_image_loss(loss_a, gah_label)
+        print("#loss#")
+        print(char_loss)
+        print(affi_loss)
+
         return char_loss/loss_g.shape[0] + affi_loss/loss_a.shape[0]

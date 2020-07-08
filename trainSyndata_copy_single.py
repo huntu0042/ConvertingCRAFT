@@ -1,5 +1,7 @@
 
 import tensorflow as tf
+import tensorflow_addons as tfa
+
 import argparse
 import time, datetime
 import random
@@ -17,7 +19,7 @@ parser = argparse.ArgumentParser(description='CRAFT reimplementation')
 
 parser.add_argument('--resume', default=None, type=str,
                     help='Checkpoint state_dict file to resume training from')
-parser.add_argument('--batch_size', default=5, type = int,
+parser.add_argument('--batch_size', default=4, type = int,
                     help='batch size of training')
 #parser.add_argument('--cdua', default=True, type=str2bool,
                     #help='Use CUDA to train model')
@@ -66,6 +68,7 @@ if __name__ == '__main__':
     batch_size = args.batch_size
     dataset = tf.data.Dataset.from_generator(synthtextloader.generate_data,output_types=(tf.float32,tf.float32,tf.float32,tf.float32,tf.float32))
     dataset = dataset.batch(batch_size=batch_size)
+    dataset = dataset.shuffle(1000,reshuffle_each_iteration=True)
     #it = iter(dataset)
 
     ###for summary
@@ -80,7 +83,7 @@ if __name__ == '__main__':
     accuracy = tf.keras.metrics.SparseCategoricalAccuracy()
     # Optimizer의 인스턴스를 만듭니다
     objectLR = controlLR()
-    optimizer = tf.keras.optimizers.Adam(learning_rate=objectLR.adjustLR)
+    optimizer = tfa.optimizers.AdamW(learning_rate=objectLR.adjustLR,weight_decay=args.weight_decay)
     lossObject = Maploss()
     print(objectLR.adjustLR())
 
@@ -108,6 +111,14 @@ if __name__ == '__main__':
                 # print(out.shape)
                 out1 = out[:, :, :, 0]
                 out2 = out[:, :, :, 1]
+                # cv2.imshow("image", image[0].numpy())
+                # cv2.imshow("gh_label",gh_label[0].numpy())
+                # cv2.imshow("gah_label", gah_label[0].numpy())
+                # cv2.imshow("out1", out1[0].numpy())
+                # cv2.imshow("out2", out2[0].numpy())
+                # cv2.imshow("mask", mask[0].numpy())
+                # cv2.waitKey(0)
+
                 loss_value = compute_loss(gh_label, gah_label, out1, out2, mask)
 
             gradients = tape.gradient(loss_value,model.trainable_weights)
@@ -129,7 +140,7 @@ if __name__ == '__main__':
                     tf.summary.scalar('loss', loss_value/2, step=step)
                     tf.summary.scalar('learning rate', objectLR.adjustLR(), step=step)
 
-            if step % 50 == 0 :
+            if step % 5000 == 0 and step != 0:
                 with train_summary_writer.as_default():
                     tf.summary.scalar('loss', loss_value/2, step=step)
                 model.save_weights('./checkpoints/my_checkpoint_'+str(step))

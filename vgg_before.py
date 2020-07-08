@@ -15,122 +15,83 @@ class vgg16_bn(tf.keras.Model):
     self.input_layer = tf.keras.layers.Input(shape=(768,768,3))
 
     # Block 1
-    self.conv1_1 =  tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=64,
+    self.conv1_1 =  tf.keras.layers.Conv2D(filters=64,
                            kernel_size=(3, 3),
-                           padding='same',
-                           name='conv1_1'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
-    self.conv1_2 =tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=64,
+                           activation='relu',
+                           padding='same',strides=[1, 1],
+                           name='conv1_1')
+    self.conv1_2 = tf.keras.layers.Conv2D(filters=64,
                            kernel_size=(3, 3),
+                           activation='relu',
                            padding='same',
-                           name='conv1_2'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
+                           name='conv1_2')
     self.pool1_1 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2), name='pool1_1')
 
     # Block 2
-    self.conv2_1 = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=128,
-                           kernel_size=(3, 3),
-                           padding='same',
-                           name='conv2_1'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
-    self.conv2_2 = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=128,
-                           kernel_size=(3, 3),
-                           padding='same',
-                           name='conv2_2'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
+    self.conv2_1 = tf.keras.layers.Conv2D(filters=128,
+                                          kernel_size=(3, 3),
+                                          activation='relu',
+                                          padding='same',
+                                          name='conv2_1')
+    self.conv2_2 = tf.keras.layers.Conv2D(filters=128,
+                                          kernel_size=(3, 3),
+                                          activation='relu',
+                                          padding='same',
+                                          name='conv2_2')
     self.pool2_1 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2), name='pool2_1')
 
     # Block 3
-    self.conv3_1 = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=256,
-                           kernel_size=(3, 3),
-                           padding='same',
-                           name='conv3_1'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
-    self.conv3_2 = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=256,
-                           kernel_size=(3, 3),
-                           padding='same',
-                           name='conv3_2'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
-    self.conv3_3 = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=256,
-                           kernel_size=(3, 3),
-                           padding='same',
-                           name='conv3_3'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
+    self.conv3_1 = tf.keras.layers.Conv2D(filters=256,
+                                          kernel_size=(3, 3),
+                                          activation='relu',
+                                          padding='same',
+                                          name='conv3_1')
+    self.conv3_2 = tf.keras.layers.Conv2D(filters=256,
+                                          kernel_size=(3, 3),
+                                          activation='relu',
+                                          padding='same',
+                                          name='conv3_2')
+    self.conv3_3 = tf.keras.layers.Conv2D(filters=256,
+                                          kernel_size=(3, 3),
+                                          activation='relu',
+                                          padding='same',
+                                          name='conv3_3')
     self.pool3_1 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2), name='pool3_1')
 
     # Block 4
-    self.conv4_1 = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=512,
+    self.conv4_1 = tf.keras.layers.Conv2D(filters=512,
                            kernel_size=(3, 3),
+                           activation='relu',
                            padding='same',
-                           name='conv4_1'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
-    self.conv4_2 = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=512,
+                           name='conv4_1')
+    self.conv4_2 = tf.keras.layers.Conv2D(filters=512,
                            kernel_size=(3, 3),
+                           activation='relu',
                            padding='same',
-                           name='conv4_2'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
-    self.conv4_3 =  tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=512,
+                           name='conv4_2')
+    self.conv4_3 = tf.keras.layers.Conv2D(filters=512,
                            kernel_size=(3, 3),
+                           activation='relu',
                            padding='same',
-                           name='conv4_3'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
+                           name='conv4_3')
     self.pool4_1 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2), name='pool4_1')
 
     # Block 5
-    self.conv5_1 =  tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=512,
+    self.conv5_1 = tf.keras.layers.Conv2D(filters=512,
                            kernel_size=(3, 3),
+                           activation='relu',
                            padding='same',
-                           name='conv5_1'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
-    self.conv5_2 = tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=512,
+                           name='conv5_1')
+    self.conv5_2 = tf.keras.layers.Conv2D(filters=512,
                            kernel_size=(3, 3),
+                           activation='relu',
                            padding='same',
-                           name='conv5_2'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
-    self.conv5_3 =tf.keras.models.Sequential([
-        tf.keras.layers.Conv2D(filters=512,
+                           name='conv5_2')
+    self.conv5_3 = tf.keras.layers.Conv2D(filters=512,
                            kernel_size=(3, 3),
+                           activation='relu',
                            padding='same',
-                           name='conv5_3'),
-        #tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.ReLU()
-                                                 ])
+                           name='conv5_3')
     #self.pool5_1 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2), name='pool5_1')
 
     # fc6, fc7 without atrous conv
