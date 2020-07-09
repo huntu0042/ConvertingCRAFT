@@ -20,7 +20,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv1_1'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.conv1_2 =tf.keras.models.Sequential([
@@ -28,7 +28,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv1_2'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.pool1_1 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2), name='pool1_1')
@@ -39,7 +39,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv2_1'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.conv2_2 = tf.keras.models.Sequential([
@@ -47,7 +47,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv2_2'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.pool2_1 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2), name='pool2_1')
@@ -58,7 +58,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv3_1'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.conv3_2 = tf.keras.models.Sequential([
@@ -66,7 +66,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv3_2'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.conv3_3 = tf.keras.models.Sequential([
@@ -74,7 +74,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv3_3'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.pool3_1 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2), name='pool3_1')
@@ -85,7 +85,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv4_1'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.conv4_2 = tf.keras.models.Sequential([
@@ -93,7 +93,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv4_2'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.conv4_3 =  tf.keras.models.Sequential([
@@ -101,7 +101,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv4_3'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.pool4_1 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2), name='pool4_1')
@@ -112,7 +112,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv5_1'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.conv5_2 = tf.keras.models.Sequential([
@@ -120,7 +120,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv5_2'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     self.conv5_3 =tf.keras.models.Sequential([
@@ -128,7 +128,7 @@ class vgg16_bn(tf.keras.Model):
                            kernel_size=(3, 3),
                            padding='same',
                            name='conv5_3'),
-        #tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.BatchNormalization(),
         tf.keras.layers.ReLU()
                                                  ])
     #self.pool5_1 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2), name='pool5_1')
@@ -156,7 +156,7 @@ class vgg16_bn(tf.keras.Model):
 
 
 
-
+  #@tf.function
   def call(self, inputs):
     # define input layer
     # print(self.pool1_1)

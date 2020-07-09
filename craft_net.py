@@ -24,7 +24,7 @@ class double_conv(tf.keras.Model):
             tf.keras.layers.ReLU()
         ])
 
-
+    #@tf.function
     def call(self, x):
         x = self.conv(x)
         return x
@@ -84,8 +84,7 @@ class CRAFT(tf.keras.Model):
                                    )]
         )
 
-
-
+    #@tf.function
     def call(self, inputs):
         sources = self.basenet(inputs)
 
