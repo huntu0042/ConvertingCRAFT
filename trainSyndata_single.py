@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser(description='CRAFT reimplementation')
 
 parser.add_argument('--resume', default=None, type=str,
                     help='Checkpoint state_dict file to resume training from')
-parser.add_argument('--batch_size', default=3, type = int,
+parser.add_argument('--batch_size', default=2, type = int,
                     help='batch size of training')
 #parser.add_argument('--cdua', default=True, type=str2bool,
                     #help='Use CUDA to train model')
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     lossObject = Maploss()
     print(objectLR.adjustLR())
 
-    #@tf.function
+    @tf.function
     def compute_loss(gh_label, gah_label, out1, out2, mask):
         loss_value = lossObject.forward(gh_label, gah_label, out1, out2, mask)
         return loss_value

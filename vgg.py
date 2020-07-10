@@ -156,7 +156,7 @@ class vgg16_bn(tf.keras.Model):
 
 
 
-  #@tf.function
+  @tf.function
   def call(self, inputs):
     # define input layer
     # print(self.pool1_1)
